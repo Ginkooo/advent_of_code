@@ -30,7 +30,7 @@ pub fn day1_part2(input: &str) -> Result<i32, Error> {
     }
     Ok(input
         .lines()
-        .filter_map(|line| line.split_whitespace().nth(0))
+        .filter_map(|line| line.split_whitespace().next())
         .filter_map(|number| number.parse::<i32>().ok())
         .map(|num| num * counter.get(&num).unwrap_or(&0))
         .sum())

@@ -14,8 +14,8 @@ fn main() {
         .expect("missing 2nd argument - part")
         .parse()
         .unwrap();
-    let input = std::fs::read_to_string(&String::from_iter([&day.to_string(), ".txt"]))
-        .expect(&format!("missing {day} input file"));
+    let input = std::fs::read_to_string(String::from_iter([&day.to_string(), ".txt"]))
+        .unwrap_or_else(|_| panic!("missing {day} input file"));
 
     let function = match (day, part) {
         (1, 1) => day1::day1_part1,

@@ -8,24 +8,28 @@ enum Ordering {
 }
 fn are_numbers_safe(acc: &mut Ordering, pair: (i32, i32)) -> bool {
     let diff = (pair.0 - pair.1).abs();
-    if diff > 3 || diff < 1 {
+    if !(1..=3).contains(&diff) {
         return false;
     }
 
-    if pair.0 < pair.1 {
-        if *acc == Ordering::Descending {
+    match pair.0.cmp(&pair.1) {
+        std::cmp::Ordering::Less => {
+            if *acc == Ordering::Descending {
+                return false;
+            }
+            *acc = Ordering::Ascending;
+        }
+        std::cmp::Ordering::Greater => {
+            if *acc == Ordering::Ascending {
+                return false;
+            }
+            *acc = Ordering::Descending;
+        }
+        std::cmp::Ordering::Equal => {
             return false;
         }
-        *acc = Ordering::Ascending;
-    } else if pair.0 > pair.1 {
-        if *acc == Ordering::Ascending {
-            return false;
-        }
-        *acc = Ordering::Descending;
-    } else {
-        return false;
     }
-    return true;
+    true
 }
 
 fn is_line_safe(line: &&str) -> bool {
@@ -69,7 +73,7 @@ fn is_any_subcombination_save(line: &&str) -> bool {
             return true;
         }
     }
-    return false;
+    false
 }
 
 pub fn day2_part2(input: &str) -> Result<i32, Error> {
