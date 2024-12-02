@@ -2,6 +2,13 @@ use std::collections::HashMap;
 
 type Error = Box<dyn std::error::Error>;
 
+#[derive(PartialEq)]
+enum Ordering {
+    Ascending,
+    Descending,
+    Unknown,
+}
+
 fn main() {
     let day: i32 = std::env::args()
         .nth(1)
@@ -19,6 +26,7 @@ fn main() {
     let function = match (day, part) {
         (1, 1) => day1_part1,
         (1, 2) => day1_part2,
+        (2, 1) => day2_part1,
         _ => {
             unimplemented!()
         }
@@ -27,6 +35,56 @@ fn main() {
     let result = function(&input).unwrap();
 
     println!("{result}");
+}
+
+fn are_numbers_safe(acc: &mut Ordering, pair: (i32, i32)) -> bool {
+    let diff = (pair.0 - pair.1).abs();
+    if diff > 3 || diff < 1 {
+        return false;
+    }
+
+    if pair.0 < pair.1 {
+        if *acc == Ordering::Descending {
+            return false;
+        }
+        *acc = Ordering::Ascending;
+    } else if pair.0 > pair.1 {
+        if *acc == Ordering::Ascending {
+            return false;
+        }
+        *acc = Ordering::Descending;
+    } else {
+        return false;
+    }
+    return true;
+}
+
+fn is_line_safe(line: &&str) -> bool {
+    let mut prev_order = Ordering::Unknown;
+    let mut dupa = Ordering::Unknown;
+    line.split_whitespace()
+        .map(|num| num.parse::<i32>().unwrap())
+        .collect::<Vec<i32>>()
+        .windows(2)
+        .map(|window| (window[0], window[1]))
+        .inspect(|&pair| {
+            dbg!(&line, are_numbers_safe(&mut dupa, pair), pair);
+            println!("");
+        })
+        .all(|pair| are_numbers_safe(&mut prev_order, pair))
+}
+
+fn day2_part1(input: &str) -> Result<i32, Error> {
+    match i32::try_from(
+        input
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .filter(is_line_safe)
+            .count(),
+    ) {
+        Ok(num) => Ok(num),
+        Err(_) => Err(Error::from("no no")),
+    }
 }
 
 fn day1_part1(input: &str) -> Result<i32, Error> {
