@@ -24,6 +24,7 @@ fn main() {
         (2, 1) => day2::day2_part1,
         (2, 2) => day2::day2_part2,
         (3, 1) => day3::day3_part1,
+        (3, 2) => day3::day3_part2,
         _ => {
             unimplemented!()
         }
