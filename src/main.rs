@@ -1,6 +1,7 @@
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 
 type Error = Box<dyn std::error::Error>;
 
@@ -25,6 +26,7 @@ fn main() {
         (2, 2) => day2::day2_part2,
         (3, 1) => day3::day3_part1,
         (3, 2) => day3::day3_part2,
+        (4, 1) => day4::day4_part1,
         _ => {
             unimplemented!()
         }
